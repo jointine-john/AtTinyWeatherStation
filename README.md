@@ -1,13 +1,24 @@
-# ATtiny85 Temperature / Humidity Sensors
+# ATtiny Weather Station
 
-Battery-powered sensor nodes (ATtiny85 + SHT40 or HTU21D + 433 MHz transmitter on 2×AA)
-reporting every ~5 minutes to an ESP32 receiver that publishes to MQTT with
-Home Assistant auto-discovery. Estimated battery use is ~140–150 mAh a year, so a
-pair of AAs lasts several years. See [Sensors](docs/sensors.md) for choosing
-between the SHT40 and the HTU21D (GY-21) used for the proof of concept.
+A battery-powered weather station reporting over 433 MHz to an ESP32 receiver,
+which publishes to MQTT with Home Assistant auto-discovery. The goal is an
+ATtiny84 station recording wind speed, gust and direction, rainfall, temperature
+and humidity, with the receiver adding pressure and a display. See
+[Future plans](docs/future-plans.md).
+
+**Status:** the radio protocol and receiver already handle wind and rain. The
+node firmware is still the ATtiny85 temperature/humidity proof of concept
+(ATtiny85 + SHT40 or HTU21D + STX882 on 2×AA, ~140–150 mAh a year), and is the
+starting point for the ATtiny84 port. The docs below describe that proof of
+concept.
+
+The ATtiny85 temperature/humidity nodes now continue as their own project,
+[AtTinyEnvSensor](https://github.com/jointine-john/AtTinyEnvSensor), including
+the coin-cell, PCB and case plans. Both projects share the radio protocol, so
+one receiver can hear both kinds of node.
 
 ```
- [ATtiny85 + sensor + STX882] ))) 433.92 MHz OOK ))) [RXB6/SRX882 + ESP32] --WiFi--> MQTT --> Home Assistant
+ [ATtiny + sensors + STX882] ))) 433.92 MHz OOK ))) [RXB6/SRX882 + ESP32] --WiFi--> MQTT --> Home Assistant
 ```
 
 ## Documentation
@@ -21,7 +32,7 @@ between the SHT40 and the HTU21D (GY-21) used for the proof of concept.
 | 5 | [Building and flashing](docs/building.md) | Build options, node IDs, battery calibration, receiver setup, Home Assistant, loopback and decoder tests |
 | 6 | [Power budget](docs/power.md) | Battery life estimate, tuning, measuring sleep current |
 | 7 | [Radio protocol](docs/protocol.md) | Frame format, typed readings (T/H, pressure, wind, rain), reliability |
-| 8 | [Future plans](docs/future-plans.md) | Coin-cell power, PCB for EasyEDA, case, receiver pressure sensor, ATtiny84 wind and rain station |
+| 8 | [Future plans](docs/future-plans.md) | ATtiny84 port, wind and rain station, receiver pressure sensor, weather display |
 
 ## Quick start
 

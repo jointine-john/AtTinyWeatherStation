@@ -7,6 +7,10 @@ sends only the readings it has: a temperature/humidity node sends two, a
 weather station can add pressure, wind and rain. The receiver announces each
 reading to Home Assistant the first time a node sends it.
 
+The format is shared with the
+[AtTinyEnvSensor](https://github.com/jointine-john/AtTinyEnvSensor) project
+(ATtiny85 temperature/humidity nodes), so one receiver can listen to both.
+
 ## Physical layer
 
 - 433.92 MHz OOK (on-off keying)
