@@ -8,9 +8,9 @@
 static void half_bit(uint8_t level)
 {
     if (level)
-        PORTB |= _BV(RADIO_TX_PIN);
+        RADIO_PORT |= _BV(RADIO_TX_PIN);
     else
-        PORTB &= ~_BV(RADIO_TX_PIN);
+        RADIO_PORT &= ~_BV(RADIO_TX_PIN);
     _delay_us(PROTO_HALF_BIT_US);
 }
 
@@ -28,8 +28,8 @@ static void send_byte(uint8_t byte)
 
 void radio_init(void)
 {
-    DDRB |= _BV(RADIO_TX_PIN);
-    PORTB &= ~_BV(RADIO_TX_PIN);
+    RADIO_DDR |= _BV(RADIO_TX_PIN);
+    RADIO_PORT &= ~_BV(RADIO_TX_PIN);
 }
 
 void radio_send(const uint8_t *packet, uint8_t len)
@@ -42,7 +42,7 @@ void radio_send(const uint8_t *packet, uint8_t len)
             send_byte(packet[i]);
         /* Ensures the last CRC half-bit is terminated by an edge. */
         send_bit(0);
-        PORTB &= ~_BV(RADIO_TX_PIN);
+        RADIO_PORT &= ~_BV(RADIO_TX_PIN);
         if (r + 1 < PROTO_REPEATS)
             _delay_ms(PROTO_REPEAT_GAP_MS);
     }

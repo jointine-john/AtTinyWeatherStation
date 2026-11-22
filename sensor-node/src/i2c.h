@@ -3,9 +3,7 @@
 #define I2C_H
 
 #include <stdint.h>
-
-#define I2C_SDA PB0
-#define I2C_SCL PB2
+#include "board.h"     /* I2C_PORT, I2C_DDR, I2C_PIN, I2C_SDA, I2C_SCL */
 
 void i2c_init(void);
 void i2c_start(void);

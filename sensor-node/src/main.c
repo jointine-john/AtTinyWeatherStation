@@ -1,20 +1,12 @@
 /*
- * ATtiny85 temperature/humidity sensor node.
+ * ATtiny85 / ATtiny84 sensor node.
  *
  * Wakes every INTERVAL_S seconds (via the watchdog), reads the sensor
  * (SHT40 or HTU21D, chosen by the PlatformIO environment) and the
  * supply voltage, transmits one packet over 433 MHz and goes back to
  * power-down sleep. Sleep current is dominated by the watchdog (~4-5 uA).
  *
- * Pinout (DIP-8):
- *   1 PB5 RESET  - ISP only
- *   2 PB3        - unused (driven low)
- *   3 PB4        - unused (driven low)
- *   4 GND
- *   5 PB0        - sensor SDA
- *   6 PB1        - transmitter DATA
- *   7 PB2        - sensor SCL
- *   8 VCC        - 2x AA direct, no regulator
+ * Pinouts for each chip are in board.h. VCC is 2x AA direct, no regulator.
  */
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -24,6 +16,7 @@
 #include <util/delay.h>
 
 #include "protocol.h"
+#include "board.h"
 #include "i2c.h"
 #include "sensor.h"
 #include "radio.h"
@@ -54,8 +47,8 @@ static void sleep_wdt(uint8_t prescale)
     cli();
     wdt_reset();
     MCUSR &= ~_BV(WDRF);
-    WDTCR = _BV(WDCE) | _BV(WDE);
-    WDTCR = _BV(WDIE) | prescale;
+    WDT_CTRL = _BV(WDCE) | _BV(WDE);
+    WDT_CTRL = _BV(WDIE) | prescale;
 
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
@@ -67,8 +60,8 @@ static void sleep_wdt(uint8_t prescale)
     sleep_disable();
 
     cli();
-    WDTCR = _BV(WDCE) | _BV(WDE);
-    WDTCR = 0;
+    WDT_CTRL = _BV(WDCE) | _BV(WDE);
+    WDT_CTRL = 0;
     sei();
 }
 
@@ -80,7 +73,7 @@ void sleep_16ms(void)
 static uint16_t read_vcc_mv(void)
 {
     power_adc_enable();
-    ADMUX = _BV(MUX3) | _BV(MUX2);                 /* measure Vbg, VCC as reference */
+    ADMUX = ADMUX_BANDGAP;                         /* measure Vbg, VCC as reference */
     ADCSRA = _BV(ADEN) | _BV(ADPS1) | _BV(ADPS0);  /* 1 MHz / 8 = 125 kHz */
     _delay_ms(2);                                  /* bandgap settling */
 
@@ -112,9 +105,7 @@ int main(void)
     ADCSRA = 0;
     power_all_disable();    /* timers, USI, ADC */
 
-    /* Unused pins as outputs low so they never float. */
-    DDRB = _BV(PB3) | _BV(PB4);
-    PORTB = 0;
+    board_init_pins();      /* unused pins driven low so they never float */
 
     radio_init();
     i2c_init();

@@ -2,18 +2,18 @@
 #include <util/delay.h>
 #include "i2c.h"
 
-/* PORTB bits for SDA/SCL stay 0, so setting DDR drives the line low and
+/* PORT bits for SDA/SCL stay 0, so setting DDR drives the line low and
  * clearing it releases the line to the pull-up. */
-#define SDA_LOW()     (DDRB |= _BV(I2C_SDA))
-#define SDA_RELEASE() (DDRB &= ~_BV(I2C_SDA))
-#define SCL_LOW()     (DDRB |= _BV(I2C_SCL))
-#define SCL_RELEASE() (DDRB &= ~_BV(I2C_SCL))
-#define SDA_READ()    (PINB & _BV(I2C_SDA))
+#define SDA_LOW()     (I2C_DDR |= _BV(I2C_SDA))
+#define SDA_RELEASE() (I2C_DDR &= ~_BV(I2C_SDA))
+#define SCL_LOW()     (I2C_DDR |= _BV(I2C_SCL))
+#define SCL_RELEASE() (I2C_DDR &= ~_BV(I2C_SCL))
+#define SDA_READ()    (I2C_PIN & _BV(I2C_SDA))
 #define HALF()        _delay_us(5)
 
 void i2c_init(void)
 {
-    PORTB &= ~(_BV(I2C_SDA) | _BV(I2C_SCL));
+    I2C_PORT &= ~(_BV(I2C_SDA) | _BV(I2C_SCL));
     SDA_RELEASE();
     SCL_RELEASE();
 }

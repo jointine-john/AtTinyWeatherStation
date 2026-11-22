@@ -5,6 +5,7 @@
 | Part | Notes |
 |---|---|
 | ATtiny85-20PU (DIP-8) or ATtiny85V | Runs at 1 MHz, fine down to 1.8 V |
+| …or ATtiny84A-PU (DIP-14) | For the weather station: same firmware, more pins. Build an `attiny84_*` environment |
 | SHT40 breakout | Must have SDA/SCL pull-ups (~10 kΩ); Adafruit/generic boards do. **Remove or cut any power LED and regulator** |
 | …or GY-21 (HTU21D/SHT21) breakout | Proof-of-concept sensor. Has pull-ups and a ~1 µA regulator, no LED, so it works as-is. Build the `htu21d` environment. See [Sensors](sensors.md) |
 | STX882 433 MHz transmitter | Rated 1.2–6 V, works well at 3 V. FS1000A also works but loses range below ~3 V |
@@ -28,6 +29,7 @@ Generic modules are linked as eBay UK searches because individual listings expir
 | ATtiny85-20PU (DIP-8) | 1 | [RS 133-1672](https://uk.rs-online.com/web/p/microcontrollers/1331672) (pack of 5, ~£1.25 each), [Farnell 1455162](https://uk.farnell.com/microchip/attiny85-20pu/mcu-8bit-attiny-20mhz-dip-8/dp/1455162) |
 | …or ATtiny85V-10PU (rated down to 1.8 V) | 1 | [Farnell 1455165](https://uk.farnell.com/microchip/attiny85v-10pu/mcu-8bit-attiny-10mhz-dip-8/dp/1455165), [DigiKey UK](https://www.digikey.co.uk/en/products/detail/microchip-technology/ATTINY85V-10PU/735471) |
 | 8-pin DIP socket | 1 | [eBay UK](https://www.ebay.co.uk/sch/i.html?_nkw=8+pin+DIP+IC+socket) |
+| …or ATtiny84A-PU (DIP-14) and a 14-pin DIP socket | 1 | [eBay UK](https://www.ebay.co.uk/sch/i.html?_nkw=ATtiny84A-PU), [eBay UK socket](https://www.ebay.co.uk/sch/i.html?_nkw=14+pin+DIP+IC+socket) |
 | …or GY-21 (HTU21D) breakout, proof of concept | 1 | [eBay UK](https://www.ebay.co.uk/sch/i.html?_nkw=GY-21+HTU21D) |
 | SHT40 breakout | 1 | [The Pi Hut – Adafruit 4885](https://thepihut.com/products/adafruit-sensirion-sht40-temperature-humidity-sensor-stemma-qt-qwiic), [Pimoroni – Adafruit 4885](https://shop.pimoroni.com/products/adafruit-sensirion-sht40-temperature-humidity-sensor-stemma-qt-qwiic), [The Pi Hut – DFRobot Fermion](https://thepihut.com/products/fermion-sht40-humidity-temperature-sensor-breakout) |
 | STX882 433 MHz transmitter | 1 | [eBay UK](https://www.ebay.co.uk/sch/i.html?_nkw=STX882), [Tindie – STX882 + SRX882 kit](https://www.tindie.com/products/icstation/stx882srx882-433mhz-transceiver8251/) |
@@ -60,4 +62,4 @@ the RXB6, but its CS (enable) pin must be tied high.
 | …or SparkFun Tiny AVR Programmer (ATtiny85 socket, no wiring needed; set `upload_protocol = usbtiny`) | [The Pi Hut](https://thepihut.com/products/sparkfun-tiny-avr-programmer) |
 
 You don't need a programmer if you already have an Arduino Uno or Nano. See
-[Programming the ATtiny85](programming.md).
+[Programming the ATtiny](programming.md).

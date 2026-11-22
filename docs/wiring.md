@@ -1,6 +1,6 @@
 # Wiring
 
-## Sensor node
+## Sensor node (ATtiny85 proof of concept)
 
 ![Sensor node schematic](images/sensor-schematic.svg)
 
@@ -32,7 +32,31 @@ The transmitter draws nothing measurable while its DATA pin is low.
 
 PB0/PB1/PB2 double as the ISP MOSI/MISO/SCK pins, so you can reprogram in-circuit
 (the transmitter will chirp during upload, which is harmless). See
-[Programming the ATtiny85](programming.md#reprogramming-a-finished-sensor-in-place).
+[Programming the ATtiny](programming.md#reprogramming-a-finished-sensor-in-place).
+
+## Sensor node (ATtiny84)
+
+The same circuit on an ATtiny84 (build `attiny84_sht40` or `attiny84_htu21d`).
+Only the pins change; see `sensor-node/src/board.h`. Pins marked "station"
+are reserved for the wind and rain hardware and are driven low by the
+firmware until that code exists, so leave them unconnected for now.
+
+```
+                            ATtiny84
+                        +------\/------+
+            Battery +  -| 1 VCC  GND 14|-  GND
+ anemometer (station)  -| 2 PB0  PA0 13|-  vane input (station)
+               unused  -| 3 PB1  PA1 12|-  vane power (station)
+            (ISP RST)  -| 4 PB3  PA2 11|-  unused
+               unused  -| 5 PB2  PA3 10|-  rain gauge (station)
+               unused  -| 6 PA7  PA4  9|-  sensor SCL / ISP SCK
+sensor SDA / ISP MOSI  -| 7 PA6  PA5  8|-  STX882 DATA / ISP MISO
+                        +--------------+
+```
+
+Fit the 100 nF capacitor across pins 1 and 14, as close to the chip as
+possible, and the 10 µF across the battery. Sensor and transmitter power
+connect as on the ATtiny85.
 
 ## Stripboard layout (sensor node)
 
@@ -83,7 +107,7 @@ multimeter afterwards. Pin 1 must not connect to pin 8, 2 to 7, 3 to 6, or 4 to 
 | BT1 | battery leads | C23 red (+), G23 black (−) | Holder switch in the red lead |
 
 J1 is a single-row header, so connect the USBasp or Arduino with jumper wires using
-the pin names. See [Programming the ATtiny85](programming.md).
+the pin names. See [Programming the ATtiny](programming.md).
 
 ### Build order
 

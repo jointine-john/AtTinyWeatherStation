@@ -11,8 +11,9 @@ Both use the same radio protocol, so one receiver can hear both.
 
 ## Goals
 
-1. Port the node firmware to the **ATtiny84**, which has the pins a weather
-   station needs.
+1. ~~Port the node firmware to the **ATtiny84**~~, which has the pins a weather
+   station needs. **Done:** builds `attiny84_sht40` and `attiny84_htu21d`;
+   not yet tested on hardware.
 2. Build a **wind and rain station**: wind speed, gust and direction, and
    rainfall from a tipping-bucket gauge, plus temperature and humidity.
 3. Have the **ESP32 receiver** record its own temperature, humidity and
@@ -57,22 +58,19 @@ The anemometer and rain gauge are on different ports, so each gets its own
 pin-change interrupt vector and the firmware never has to work out which one
 fired.
 
-### Porting the firmware
+### Porting the firmware (done)
 
-The code is small and mostly portable. What changes:
-
-- **Pin definitions:** `radio.c`, `i2c.c` and `main.c` use `PORTB`/`DDRB`/`PINB`
-  and fixed bit numbers. Move these into a per-board header (`board.h`)
-  selected by the PlatformIO environment.
-- **Register names:** the watchdog control register is `WDTCSR` on the
-  ATtiny84 (`WDTCR` on the ATtiny85).
-- **Battery reading:** the ADC channel for the internal 1.1 V reference is
-  different (`MUX5:0 = 100001` on the ATtiny84).
-- **Build:** add an `attiny84` board and fuse settings in
-  `sensor-node/platformio.ini`, alongside the existing `htu21d` and `sht40`
-  environments.
-- The radio protocol needs no change: wind and rain readings are already
-  defined (see [Radio protocol](protocol.md#readings)).
+- **Pin definitions** live in `sensor-node/src/board.h`, chosen by the chip
+  the PlatformIO environment builds for. `radio.c`, `i2c.c` and `main.c` use
+  its names instead of fixed ports.
+- **Register differences** are handled there too: the watchdog control
+  register (`WDTCSR` on the ATtiny84, `WDTCR` on the ATtiny85) and the ADC
+  setting for the 1.1 V reference used by the battery reading.
+- **Build:** `attiny84_sht40` and `attiny84_htu21d` environments in
+  `sensor-node/platformio.ini`, with the same fuses as the ATtiny85.
+- The ATtiny85 builds are byte-for-byte unchanged by the port.
+- Still to do: flash an ATtiny84, check it reports temperature, humidity and
+  battery voltage, and measure its sleep current (expect about 5 µA).
 
 ## 2. Wind and rain station
 
@@ -152,8 +150,8 @@ box are awkward to change.
 
 ### Steps
 
-1. Port the firmware to the ATtiny84 (section 1) and check a T/H-only build
-   against the receiver.
+1. Flash the ATtiny84 build (section 1) and check temperature, humidity and
+   battery reach the receiver.
 2. Add anemometer and rain counting on a breadboard, then check pulse counts
    against hand-turned cups and a measured volume of water poured through the
    gauge.

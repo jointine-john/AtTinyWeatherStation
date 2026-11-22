@@ -4,22 +4,29 @@ Install [PlatformIO Core](https://docs.platformio.org/en/latest/core/installatio
 
 ## Sensor node
 
-The ATtiny85 is programmed over ISP with a USBasp or an Arduino running
-ArduinoISP. See [Programming the ATtiny85](programming.md) for wiring.
+The ATtiny is programmed over ISP with a USBasp or an Arduino running
+ArduinoISP. See [Programming the ATtiny](programming.md) for wiring.
 
-Choose the PlatformIO environment that matches your sensor board (see
-[Sensors](sensors.md) for the differences):
+Choose the PlatformIO environment that matches your chip and sensor board (see
+[Sensors](sensors.md) for the differences between the sensors):
 
-| Environment | Sensor | Example boards |
-|---|---|---|
-| `htu21d` (default) | HTU21D, SHT21 or Si7021 | GY-21, GY-213V |
-| `sht40` | Sensirion SHT40 | Adafruit 4885, DFRobot Fermion |
+| Environment | Chip | Sensor | Example boards |
+|---|---|---|---|
+| `htu21d` (default) | ATtiny85 | HTU21D, SHT21 or Si7021 | GY-21, GY-213V |
+| `sht40` | ATtiny85 | Sensirion SHT40 | Adafruit 4885, DFRobot Fermion |
+| `attiny84_htu21d` | ATtiny84/84A | HTU21D, SHT21 or Si7021 | GY-21, GY-213V |
+| `attiny84_sht40` | ATtiny84/84A | Sensirion SHT40 | Adafruit 4885, DFRobot Fermion |
+
+Pin-outs for each chip are in `sensor-node/src/board.h` and
+[Wiring](wiring.md). The ATtiny84 builds currently send temperature and
+humidity only; wind and rain come next (see [Future plans](future-plans.md)).
 
 ```sh
 cd sensor-node
 pio run -t fuses                                   # once per new chip
 PLATFORMIO_BUILD_FLAGS="-DNODE_ID=1" pio run -t upload            # HTU21D/GY-21
 PLATFORMIO_BUILD_FLAGS="-DNODE_ID=2" pio run -e sht40 -t upload   # SHT40
+PLATFORMIO_BUILD_FLAGS="-DNODE_ID=3" pio run -e attiny84_sht40 -t upload   # ATtiny84
 ```
 
 Give each sensor a unique `NODE_ID` (1–255). If the build doesn't match the
@@ -32,7 +39,7 @@ battery voltage.
 |---|---|---|
 | `NODE_ID` | 1 | Sensor ID reported to the receiver |
 | `INTERVAL_S` | 300 | Seconds between readings (rounded to 8 s steps) |
-| `BANDGAP_MV` | 1100 | ATtiny85 internal reference, for battery calibration |
+| `BANDGAP_MV` | 1100 | ATtiny internal reference, for battery calibration |
 
 ### Calibrating the battery reading
 
